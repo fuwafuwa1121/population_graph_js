@@ -12,12 +12,9 @@ class Population extends Component {
     }
 
     componentDidMount() {
-        fetch(
-            "https://opendata.resas-portal.go.jp/api/v1/population/sum/perYear?cityCode=11362&prefCode=11",
-            {
-                headers: { "X-API-KEY": apiKey() },
-            }
-        )
+        fetch("https://opendata.resas-portal.go.jp/api/v1/prefectures", {
+            headers: { "X-API-KEY": apiKey() },
+        })
             .then((responce) => responce.json())
             .then((res) => {
                 this.setState({ prefectures: res.result });
@@ -27,11 +24,7 @@ class Population extends Component {
     render() {
         let { selected, prefectures } = this.state;
         console.log(prefectures);
-        return (
-            <>
-                <p>成功</p>
-            </>
-        );
+        return <></>;
     }
 }
 

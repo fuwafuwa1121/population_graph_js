@@ -1,3 +1,5 @@
+import { useFetchPopulations, useFetchPrefectures } from "../resas_gateway";
+
 export const Checkbox = (props) => {
     return (
         <div>

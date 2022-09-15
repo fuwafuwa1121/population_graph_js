@@ -10,14 +10,28 @@ export const useFetchPrefectures = () => {
         axios
             .get(
                 "https://opendata.resas-portal.go.jp/api/v1/prefectures",
-                Config()
+                config()
             )
             .then((responce) => {
                 setPrefectures(responce.data);
             });
     }, []);
 
-    return prefectures;
+    // useEffect(() => {
+    //     const fetchData = () => {
+    //         axios
+    //             .get(
+    //                 "https://opendata.resas-portal.go.jp/api/v1/prefectures",
+    //                 config()
+    //             )
+    //             .then((responce) => {
+    //                 setPrefectures(responce.data);
+    //                 console.log("hi");
+    //             });
+    //     };
+    //     fetchData();
+    // }, []);
+    console.log(prefectures);
 };
 
 // 人口一覧を取得
@@ -28,7 +42,7 @@ export const useFetchPopulations = () => {
         axios
             .get(
                 "https://opendata.resas-portal.go.jp/api/v1/population/composition/perYear?cityCode=11362&prefCode=11",
-                Config()
+                config()
             )
             .then((responce) => {
                 setPopulations(responce.data);
@@ -38,7 +52,7 @@ export const useFetchPopulations = () => {
     return populations;
 };
 
-const Config = () => {
+const config = () => {
     return {
         headers: {
             "X-API-KEY": apiKey(),

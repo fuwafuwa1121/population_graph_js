@@ -31,7 +31,6 @@ export const useFetchPrefectures = () => {
     //     };
     //     fetchData();
     // }, []);
-    console.log(prefectures);
 };
 
 // 人口一覧を取得

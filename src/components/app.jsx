@@ -13,6 +13,7 @@ export const App = () => {
         },
     };
 
+    // 都道府県一覧を取得
     useEffect(() => {
         axios
             .get(
@@ -21,24 +22,55 @@ export const App = () => {
             )
             .then((responce) => {
                 setPrefectures(responce.data);
-                console.log(responce.data);
+            });
+    }, []);
+
+    const [populations, setPopulations] = useState([]);
+
+    // 人口一覧を取得
+    useEffect(() => {
+        axios
+            .get(
+                "https://opendata.resas-portal.go.jp/api/v1/population/composition/perYear?cityCode=11362&prefCode=11",
+                config
+            )
+            .then((responce) => {
+                setPopulations(responce.data);
             });
     }, []);
 
     // [{prefCode: 1, prefName: "北海道"}...] を取り出す
-    let prefArray = Object.entries(prefectures).flat(1).pop();
+    let prefecturesArr;
+    if (prefectures.length === 0) {
+        prefecturesArr = [];
+    } else {
+        prefecturesArr = Object.entries(prefectures).flat(1).pop();
+    }
+
+    let populationsArr;
+    if (populations.length === 0) {
+        populationsArr = [];
+    } else {
+        // [{year: 1980, value: 12817}...] を取り出す
+        let tmp = Object.entries(populations).flat(1).pop().data;
+        populationsArr = tmp.find((elem) => {
+            return elem.label === "総人口";
+        }).data;
+        console.log(populationsArr);
+    }
 
     return (
         <div>
-            {!prefArray ? <div></div> : <Checkbox data={prefArray} />}
-            {/* <Checkbox data={prefectures} /> */}
-            {/* <Graph data={populations} /> */}
+            {prefecturesArr.length === 0 ? (
+                <div></div>
+            ) : (
+                <Checkbox data={prefecturesArr} />
+            )}
+            {populationsArr.length === 0 ? (
+                <div></div>
+            ) : (
+                <Graph data={populationsArr} />
+            )}
         </div>
     );
 };
-
-// 必要なデータの取り出し
-// 次数を下げる + 最後の要素を取る
-const useExtractData = (prefRes) => {
-    return Object.entries(prefRes).flat(1).pop();
-}; //

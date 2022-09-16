@@ -56,7 +56,6 @@ export const App = () => {
         populationsArr = tmp.find((elem) => {
             return elem.label === "総人口";
         }).data;
-        console.log(populationsArr);
     }
 
     return (

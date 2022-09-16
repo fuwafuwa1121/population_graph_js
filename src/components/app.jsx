@@ -31,7 +31,7 @@ export const App = () => {
     useEffect(() => {
         axios
             .get(
-                "https://opendata.resas-portal.go.jp/api/v1/population/composition/perYear?cityCode=11362&prefCode=11",
+                "https://opendata.resas-portal.go.jp/api/v1/population/composition/perYear?cityCode=-&prefCode=11",
                 config
             )
             .then((responce) => {
@@ -58,11 +58,28 @@ export const App = () => {
         }).data;
     }
 
+    // 人口のデータを更新する
+    const refetchOnChange = (prefCode, prefName, checked) => {
+        console.log(prefCode, prefName, checked);
+        axios
+            .get(
+                `https://opendata.resas-portal.go.jp/api/v1/population/composition/perYear?cityCode=-&prefCode=${prefCode}`,
+                config
+            )
+            .then((responce) => {
+                setPopulations(responce.data);
+            });
+    };
+
     return (
         <main>
             <div>
                 {prefecturesArr.length !== 0 && (
-                    <Checkbox data={prefecturesArr} key="checkbox" />
+                    <Checkbox
+                        data={prefecturesArr}
+                        key="checkbox"
+                        refetch={refetchOnChange}
+                    />
                 )}
             </div>
             <div id="graph_container">

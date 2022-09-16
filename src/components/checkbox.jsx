@@ -10,6 +10,13 @@ export const Checkbox = (props) => {
                             type="checkbox"
                             name={elem.prefCode}
                             id={elem.prefCode}
+                            onChange={(event) => {
+                                props.refetch(
+                                    elem.prefCode,
+                                    elem.prefName,
+                                    event.target.checked
+                                );
+                            }}
                         />
                     </div>
                 );

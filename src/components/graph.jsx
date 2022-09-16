@@ -28,10 +28,9 @@ export const Graph = (props) => {
     //     },
     //     series: series,
     // };
-    console.log(years);
     HighCharts.chart({
         chart: {
-            renderTo: "root",
+            renderTo: "graph_container",
             type: "line",
         },
         title: {
@@ -56,9 +55,5 @@ export const Graph = (props) => {
         ],
     });
 
-    return (
-        <>
-            <HighchartsReact highCharts={HighCharts} />
-        </>
-    );
+    return <HighchartsReact highCharts={HighCharts} />;
 };

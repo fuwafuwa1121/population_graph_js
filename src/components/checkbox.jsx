@@ -1,8 +1,7 @@
-import { useFetchPopulations, useFetchPrefectures } from "../resas_gateway";
-
+// 都道府県一覧のチェックボックス
 export const Checkbox = (props) => {
     return (
-        <div>
+        <>
             {props.data.map((elem) => {
                 return (
                     <div key={elem.prefCode}>
@@ -15,6 +14,6 @@ export const Checkbox = (props) => {
                     </div>
                 );
             })}
-        </div>
+        </>
     );
 };

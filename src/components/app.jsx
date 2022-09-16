@@ -59,17 +59,17 @@ export const App = () => {
     }
 
     return (
-        <div>
-            {prefecturesArr.length === 0 ? (
-                <div></div>
-            ) : (
-                <Checkbox data={prefecturesArr} />
-            )}
-            {populationsArr.length === 0 ? (
-                <div></div>
-            ) : (
-                <Graph data={populationsArr} />
-            )}
-        </div>
+        <main>
+            <div>
+                {prefecturesArr.length !== 0 && (
+                    <Checkbox data={prefecturesArr} key="checkbox" />
+                )}
+            </div>
+            <div id="graph_container">
+                {populationsArr.length !== 0 && (
+                    <Graph data={populationsArr} key="highchats" />
+                )}
+            </div>
+        </main>
     );
 };

@@ -2,32 +2,52 @@ import HighchartsReact from "highcharts-react-official";
 import HighCharts from "highcharts";
 
 export const Graph = (props) => {
-    // 年度を取り出して配列をつくる [1980,1985,1990...]
-    let years = props.data.map((elem) => {
-        return String(elem.year);
+    // prefNameを取り出す
+    let prefName = "";
+    props.data.forEach((elem) => {
+        prefName = elem.prefName;
     });
+    // 年度を取り出して配列をつくる [1980,1985,1990...]
+    let years = props.data.flatMap((elem) => {
+        return elem.data;
+    });
+    years = years.map((elem) => {
+        return elem.year;
+    });
+
     // 人口数を取り出して配列を作る [12817, 12707,12751...]
-    let populations = props.data.map((elem) => {
+    let data = props.data.flatMap((elem) => {
+        return elem.data;
+    });
+    data = data.map((elem) => {
         return elem.value;
     });
-    // グラフの設定
-    // const options = {
-    //     title: {
-    //         text: "総人口推移",
-    //     },
-    //     xAxis: {
-    //         title: {
-    //             text: "年度",
-    //         },
-    //         categories: categories,
-    //     },
-    //     yAxis: {
-    //         title: {
-    //             text: "人口数",
-    //         },
-    //     },
-    //     series: series,
-    // };
+
+    // [{prefName: "北海道", data: [...]}...] の形へ変形
+    let series = [
+        {
+            name: prefName,
+            data: data,
+        },
+    ];
+
+    let multiPopulations;
+    if (props.multiData !== undefined || props.multiData !== null) {
+        multiPopulations = props.multiData.map((elem) => {
+            let prefName = Object.keys(elem)[0];
+            let values = Object.values(elem).flat(1);
+            values = values.map((elem) => {
+                return elem.value;
+            });
+            return {
+                name: prefName,
+                data: values,
+            };
+        });
+        series = multiPopulations;
+    }
+    console.log(series);
+
     HighCharts.chart({
         chart: {
             renderTo: "graph_container",
@@ -47,12 +67,7 @@ export const Graph = (props) => {
                 text: "総人口",
             },
         },
-        series: [
-            {
-                name: "総人口推移",
-                data: populations,
-            },
-        ],
+        series: series,
     });
 
     return <HighchartsReact highCharts={HighCharts} />;

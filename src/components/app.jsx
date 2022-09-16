@@ -7,7 +7,6 @@ import { CheckboxWrapper, GraphWrapper, Title } from "./style";
 
 export const App = () => {
     const [prefectures, setPrefectures] = useState([]);
-
     let config = {
         headers: {
             "X-API-KEY": "8zcmxWVVsrCbvLmCUwL65PIYWdmDzxeGzMSrVj0d",
@@ -27,12 +26,11 @@ export const App = () => {
     }, []);
 
     const [populations, setPopulations] = useState([]);
-
     // 人口一覧を取得
     useEffect(() => {
         axios
             .get(
-                "https://opendata.resas-portal.go.jp/api/v1/population/composition/perYear?cityCode=-&prefCode=11",
+                "https://opendata.resas-portal.go.jp/api/v1/population/composition/perYear?cityCode=-&prefCode=1",
                 config
             )
             .then((responce) => {
@@ -54,22 +52,86 @@ export const App = () => {
     } else {
         // [{year: 1980, value: 12817}...] を取り出す
         let tmp = Object.entries(populations).flat(1).pop().data;
-        populationsArr = tmp.find((elem) => {
+        tmp = tmp.find((elem) => {
             return elem.label === "総人口";
         }).data;
+        populationsArr = [
+            {
+                prefName: "北海道",
+                data: tmp,
+            },
+        ];
     }
+    console.log(populationsArr);
 
     // 人口のデータを更新する
-    const refetchOnChange = (prefCode, prefName, checked) => {
-        console.log(prefCode, prefName, checked);
-        axios
-            .get(
-                `https://opendata.resas-portal.go.jp/api/v1/population/composition/perYear?cityCode=-&prefCode=${prefCode}`,
-                config
-            )
-            .then((responce) => {
-                setPopulations(responce.data);
+    const [multiPopulations, setMultiPopulations] = useState([]);
+    const refetchOnChange = () => {
+        let checkedBoxes = updateCheckBoxesCondition();
+        let multiPopulations = [];
+
+        // チェックの入っている県のデータを順に取得
+        const refetch = () => {
+            checkedBoxes.forEach((elem) => {
+                let prefName = elem.prefName;
+                axios
+                    .get(
+                        `https://opendata.resas-portal.go.jp/api/v1/population/composition/perYear?cityCode=-&prefCode=${elem.prefCode}`,
+                        config
+                    )
+                    .then((responce) => {
+                        // ["北海道": {...},"青森県": {...}] の形に変形
+                        multiPopulations.push({
+                            [prefName]: responce.data,
+                        });
+                        callSetState(multiPopulations);
+                    });
             });
+        };
+
+        // setStateを呼び出す
+        const callSetState = (multiPopu) => {
+            let multiPopulationsArr = formatMultiPopulations(multiPopu);
+            setMultiPopulations(multiPopulationsArr);
+            console.log(multiPopulations);
+        };
+        refetch();
+    };
+
+    // multiPopulationsの整形
+    const formatMultiPopulations = (multiPopulations) => {
+        let multiPopulationsArr = [];
+        multiPopulations.flatMap((elem) => {
+            let prefName = Object.keys(elem)[0];
+            let data = Object.values(elem)
+                .map((elem) => {
+                    return elem.result.data;
+                })
+                .flat(1);
+            let populations = data.find((elem) => {
+                return elem.label === "総人口";
+            }).data;
+            multiPopulationsArr.push({
+                [prefName]: populations,
+            });
+        });
+        return multiPopulationsArr;
+    };
+    // すべてのチェックボックスについて、チェックされているか確認する
+    const updateCheckBoxesCondition = () => {
+        let inputElements = document.getElementsByTagName("input");
+        inputElements = [...inputElements];
+        let checkedBoxes = [];
+
+        inputElements.forEach((elem) => {
+            if (elem.checked === true) {
+                checkedBoxes.push({
+                    prefCode: elem.id,
+                    prefName: elem.name,
+                });
+            }
+        });
+        return checkedBoxes;
     };
 
     return (
@@ -86,7 +148,11 @@ export const App = () => {
             </CheckboxWrapper>
             <GraphWrapper id="graph_container">
                 {populationsArr.length !== 0 && (
-                    <Graph data={populationsArr} key="highchats" />
+                    <Graph
+                        data={populationsArr}
+                        key="highchats"
+                        multiData={multiPopulations}
+                    />
                 )}
             </GraphWrapper>
         </main>

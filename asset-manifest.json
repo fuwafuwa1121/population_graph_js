@@ -1,0 +1,10 @@
+{
+  "files": {
+    "main.js": "/population_graph_js/static/js/main.d264d85e.js",
+    "index.html": "/population_graph_js/index.html",
+    "main.d264d85e.js.map": "/population_graph_js/static/js/main.d264d85e.js.map"
+  },
+  "entrypoints": [
+    "static/js/main.d264d85e.js"
+  ]
+}

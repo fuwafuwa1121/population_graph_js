@@ -3,6 +3,7 @@ import axios from "axios";
 import { apiKey } from "../api_key";
 import { Checkbox } from "./checkbox";
 import { Graph } from "./graph";
+import { CheckboxWrapper, GraphWrapper, Title } from "./style";
 
 export const App = () => {
     const [prefectures, setPrefectures] = useState([]);
@@ -73,7 +74,8 @@ export const App = () => {
 
     return (
         <main>
-            <div>
+            <Title>都道府県別総人口推移</Title>
+            <CheckboxWrapper>
                 {prefecturesArr.length !== 0 && (
                     <Checkbox
                         data={prefecturesArr}
@@ -81,12 +83,12 @@ export const App = () => {
                         refetch={refetchOnChange}
                     />
                 )}
-            </div>
-            <div id="graph_container">
+            </CheckboxWrapper>
+            <GraphWrapper id="graph_container">
                 {populationsArr.length !== 0 && (
                     <Graph data={populationsArr} key="highchats" />
                 )}
-            </div>
+            </GraphWrapper>
         </main>
     );
 };

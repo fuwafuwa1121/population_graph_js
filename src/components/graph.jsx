@@ -24,15 +24,14 @@ export const Graph = (props) => {
     });
 
     // [{prefName: "北海道", data: [...]}...] の形へ変形
-    let series = [
-        {
-            name: prefName,
-            data: data,
-        },
-    ];
+    let series = [];
+    series[0] = {
+        name: prefName,
+        data: data,
+    };
 
     let multiPopulations;
-    if (props.multiData !== undefined || props.multiData !== null) {
+    if (props.multiData.length !== 0) {
         multiPopulations = props.multiData.map((elem) => {
             let prefName = Object.keys(elem)[0];
             let values = Object.values(elem).flat(1);
@@ -46,7 +45,6 @@ export const Graph = (props) => {
         });
         series = multiPopulations;
     }
-    console.log(series);
 
     HighCharts.chart({
         chart: {

@@ -62,7 +62,6 @@ export const App = () => {
             },
         ];
     }
-    console.log(populationsArr);
 
     // 人口のデータを更新する
     const [multiPopulations, setMultiPopulations] = useState([]);
@@ -93,7 +92,6 @@ export const App = () => {
         const callSetState = (multiPopu) => {
             let multiPopulationsArr = formatMultiPopulations(multiPopu);
             setMultiPopulations(multiPopulationsArr);
-            console.log(multiPopulations);
         };
         refetch();
     };
